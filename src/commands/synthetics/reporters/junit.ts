@@ -3,6 +3,7 @@ import {BaseContext} from 'clipanion'
 import {promises as fs} from 'fs'
 import {Writable} from 'stream'
 import {Builder} from 'xml2js'
+import path from 'path'
 
 import {
   ApiTestResult,
@@ -131,6 +132,7 @@ export class JUnitReporter implements Reporter {
     // Write the file
     try {
       const xml = this.builder.buildObject(this.json)
+      await fs.mkdir(path.dirname(this.destination), {recursive: true})
       await fs.writeFile(this.destination, xml, 'utf8')
       this.write(`✅ Created a jUnit report at ${c.bold.green(this.destination)}\n`)
     } catch (e) {
