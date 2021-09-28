@@ -1,9 +1,9 @@
 import c from 'chalk'
 import {BaseContext} from 'clipanion'
 import {promises as fs} from 'fs'
+import path from 'path'
 import {Writable} from 'stream'
 import {Builder} from 'xml2js'
-import path from 'path'
 
 import {
   ApiTestResult,
