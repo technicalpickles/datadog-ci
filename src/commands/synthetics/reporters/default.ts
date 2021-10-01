@@ -5,6 +5,7 @@ import {Writable} from 'stream'
 import {
   Assertion,
   ConfigOverride,
+  ERRORS,
   ExecutionRule,
   LocationsMapping,
   Operator,
@@ -184,12 +185,13 @@ const renderApiRequestDescription = (subType: string, config: Test['config']): s
 }
 
 const getResultUrl = (baseUrl: string, test: Test, resultId: string) => {
+  const ciQueryParam = 'from_ci=true'
   const testDetailUrl = `${baseUrl}synthetics/details/${test.public_id}`
   if (test.type === 'browser') {
-    return `${testDetailUrl}/result/${resultId}`
+    return `${testDetailUrl}/result/${resultId}?${ciQueryParam}`
   }
 
-  return `${testDetailUrl}?resultId=${resultId}`
+  return `${testDetailUrl}?resultId=${resultId}&${ciQueryParam}`
 }
 
 const renderExecutionResult = (
@@ -217,7 +219,7 @@ const renderExecutionResult = (
     const durationText = duration ? `  total duration: ${duration} ms -` : ''
 
     const resultUrl = getResultUrl(baseUrl, test, resultID)
-    const resultUrlStatus = result.error === 'Timeout' ? '(not yet received)' : ''
+    const resultUrlStatus = result.error === ERRORS.TIMEOUT ? '(not yet received)' : ''
 
     const resultInfo = `    ⎋${durationText} result url: ${chalk.dim.cyan(resultUrl)} ${resultUrlStatus}`
     outputLines.push(resultInfo)
